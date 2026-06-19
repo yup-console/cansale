@@ -155,10 +155,19 @@ const SkillIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-const SKILLS = [
-  "Python", "Java", "JavaScript", "TypeScript",
-  "HTML", "CSS", "Next.js", "React.js",
-  "MySQL", "MongoDB", "Node.js",
+const SKILL_CATEGORIES = [
+  {
+    label: "languages",
+    items: ["Python", "Java", "JavaScript", "TypeScript"],
+  },
+  {
+    label: "frontend",
+    items: ["HTML", "CSS", "React.js", "Next.js"],
+  },
+  {
+    label: "backend & databases",
+    items: ["Node.js", "MySQL", "MongoDB"],
+  },
 ];
 
 const PROJECTS = [
@@ -211,20 +220,29 @@ export default function Home() {
 
   /* ── AUDIO ── */
   useEffect(() => {
-    const audio = new Audio("/music.mp3");
+    const audio = new Audio("/voice.mp3");
     audio.loop = true;
-    audio.volume = 0.35;
-    audio.muted = true;
+    audio.volume = 0.4;
+    audio.muted = false;
     audioRef.current = audio;
-    const tryPlay = () => { audio.play().catch(() => {}); };
-    document.addEventListener("click", tryPlay, { once: true });
-    document.addEventListener("keydown", tryPlay, { once: true });
-    audio.play().catch(() => {});
-    return () => {
-      audio.pause();
-      document.removeEventListener("click", tryPlay);
-      document.removeEventListener("keydown", tryPlay);
-    };
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => { setMuted(false); })
+        .catch(() => {
+          setMuted(true);
+          audio.muted = true;
+          const unlock = () => {
+            audio.muted = false;
+            audio.play().then(() => setMuted(false)).catch(() => {});
+            document.removeEventListener("click", unlock);
+            document.removeEventListener("keydown", unlock);
+          };
+          document.addEventListener("click", unlock);
+          document.addEventListener("keydown", unlock);
+        });
+    }
+    return () => { audio.pause(); };
   }, []);
 
   const toggleMute = () => {
@@ -341,9 +359,9 @@ export default function Home() {
         <button
           className={`${styles.muteBtn}${!muted ? ` ${styles.muteBtnPlaying}` : ""}`}
           onClick={toggleMute}
+          aria-label={muted ? "Unmute" : "Mute"}
         >
           {muted ? <IconMute /> : <IconVolume />}
-          {muted ? "muted" : "playing"}
         </button>
       </nav>
 
@@ -415,14 +433,19 @@ export default function Home() {
       <section ref={skillsRef} id="skills" className={styles.section}>
         <div className={styles.wrap}>
           <div className={styles.secLabel}>technologies i work with</div>
-          <div className={styles.skGrid}>
-            {SKILLS.map((name) => (
-              <div className={styles.skChip} key={name}>
-                <span className={styles.skIcon}>{SkillIcons[name]}</span>
-                {name}
+          {SKILL_CATEGORIES.map((cat) => (
+            <div className={styles.skCategory} key={cat.label}>
+              <div className={styles.skCatLabel}>{cat.label}</div>
+              <div className={styles.skGrid}>
+                {cat.items.map((name) => (
+                  <div className={styles.skChip} key={name}>
+                    <span className={styles.skIcon}>{SkillIcons[name]}</span>
+                    {name}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 

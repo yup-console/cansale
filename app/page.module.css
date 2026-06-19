@@ -128,18 +128,17 @@
 .muteBtn {
   display: flex;
   align-items: center;
-  gap: 7px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 7px;
-  padding: 6px 12px;
   color: #555;
-  font-family: 'JetBrains Mono', 'Courier New', monospace;
-  font-size: 11px;
   cursor: pointer;
   transition: color 0.18s, border-color 0.18s, background 0.18s;
   backdrop-filter: blur(12px);
-  letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
 .muteBtn:hover { color: #c2c2c2; border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.06); }
@@ -149,11 +148,10 @@
 .section {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 110px 20px 64px;
+  padding: 80px 20px 80px;
 }
 
 .wrap {
@@ -289,6 +287,19 @@
 .projLink:hover { color: #a0a0a0; }
 
 /* ── SKILLS ── */
+.skCategory {
+  margin-bottom: 24px;
+}
+
+.skCatLabel {
+  font-size: 10px;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 10px;
+}
+
 .skGrid { display: flex; flex-wrap: wrap; gap: 7px; }
 
 .skChip {
@@ -343,6 +354,5 @@
 /* ── MOBILE ── */
 @media (max-width: 480px) {
   .navBtn { font-size: 11px; padding: 5px 9px; }
-  .muteBtn { font-size: 10px; padding: 5px 10px; }
-  .section { padding: 96px 16px 50px; }
+  .section { padding: 64px 16px 48px; }
 }
